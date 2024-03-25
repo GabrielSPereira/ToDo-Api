@@ -1,3 +1,4 @@
+using GerenciamentoTodo.Application.Models.Todo;
 using GerenciamentoTodo.Application.Models.User;
 using GerenciamentoTodo.Application.Services.Implementations;
 using GerenciamentoTodo.Application.Services.Interfaces;
@@ -22,10 +23,19 @@ namespace GerenciamentoTodos.Api.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Post(User user)
+        public IActionResult Post(UserAddInput input)
         {
-            _userService.CreateUser(user);
-            return Ok(user);
+            try
+            {
+                var user = new User(input.Nome);
+                _userService.CreateUser(user);
+                return Ok(user);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.Message);
+            }
         }
 
         [HttpGet("Login/{nome}")]

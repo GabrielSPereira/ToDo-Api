@@ -35,7 +35,7 @@ namespace GerenciamentoTodo.Infrastructure.Repositories.Implementations
 
         public void Update(Todo todo)
         {
-            todo.Update(todo.Titulo, todo.Descricao, todo.DataConclusao);
+            _context.Update(todo);
             _context.SaveChanges();
         }
 

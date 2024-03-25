@@ -1,9 +1,8 @@
+using GerenciamentoTodo.Application.Models.Todo;
 using GerenciamentoTodo.Application.Services.Interfaces;
 using GerenciamentoTodo.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace GerenciamentoTodos.Api.Controllers
 {
@@ -24,8 +23,6 @@ namespace GerenciamentoTodos.Api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
             var todos = _todoService.GetAllTodos();
             return Ok(todos);
         }
@@ -43,15 +40,17 @@ namespace GerenciamentoTodos.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Todo todo)
+        public IActionResult Post(TodoAddInput input)
         {
+            var todo = new Todo(input.Titulo, input.Descricao, input.DataConclusao);
             _todoService.CreateTodo(todo);
             return CreatedAtAction(nameof(GetById), new { id = todo.Id }, todo);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Todo todo)
+        public IActionResult Put(int id, TodoUpdateInput input)
         {
+            var todo = new Todo(input.Titulo, input.Descricao, input.DataConclusao);
             var updated = _todoService.UpdateTodo(id, todo);
             if (!updated)
             {

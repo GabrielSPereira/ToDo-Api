@@ -13,10 +13,14 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.json");
+
+var connectionString = builder.Configuration.GetConnectionString("ToDoCs");
 // Add services to the container.
 builder.Services.AddDbContext<GerenciamentoTodoDbContext>(
+    options => options.UseSqlServer(connectionString));
+/*builder.Services.AddDbContext<GerenciamentoTodoDbContext>(
     options => options.UseInMemoryDatabase("ToDoDb"));
-
+*/
 builder.Services.AddScoped<ITodoService, TodoService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
